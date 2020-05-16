@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2020/05/16/inline%20const%20mutable%20this%20static%20/</loc>
+    
+    <lastmod>2020-05-16T07:42:33.424Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2020/05/15/post-name/</loc>
+    
+    <lastmod>2020-05-15T13:17:43.225Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2020/05/14/t1/</loc>
     
     <lastmod>2020-05-14T14:34:13.502Z</lastmod>
