@@ -152,30 +152,40 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-GpuInterpreterSourceStudyone" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-可变参数宏" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/19/GpuInterpreterSourceStudyone/">GpuInterpreterSourceStudyone</a>
+      <a class="article-title" href="/2020/06/01/%E5%8F%AF%E5%8F%98%E5%8F%82%E6%95%B0%E5%AE%8F/">可变参数宏</a>
     </h1>
   
 
         
-        <a href="/2020/05/19/GpuInterpreterSourceStudyone/" class="archive-article-date">
-  	<time datetime="2020-05-19T06:45:47.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-05-19</time>
+        <a href="/2020/06/01/%E5%8F%AF%E5%8F%98%E5%8F%82%E6%95%B0%E5%AE%8F/" class="archive-article-date">
+  	<time datetime="2020-06-01T03:02:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-01</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="1-tuple"><a href="#1-tuple" class="headerlink" title="1.tuple"></a>1.tuple</h1>
-        
-          <a class="article-more-a" href="/2020/05/19/GpuInterpreterSourceStudyone/#more">more >></a>
-        
+        <p>为了在linux 打印输出调试定义了一个基于printf的简单的宏定义如下：</p>
+<pre><code class="c++">#define IS_DEBUG 0 //日志输出开关,当设置为0时,是关闭
+
+#if(IS_PR)
+#define  J_PR(format, ...) \
+printf(&quot;FUNCTION:&quot; __FUNCTION__&quot; LINE: %d: &quot;format&quot;&quot;, __LINE__, ##__VA_ARGS__)
+#else
+#define  J_PR(format, ...)
+#endif</code></pre>
+<p>说明：##<em>VA_ARGS</em> _  其中##意思是，如果可变参数被忽略或为空，将使预处理器（ preprocessor ）去除掉它前面的那个逗号。</p>
+<p>format 代替的是如下结构</p>
+<p>（%s\n,”test”）;  ————-  format is “%s\n” and   可变参数宏_VA_ARGS  is “test”</p>
+<p>(“test”)  ;            ————— format ===”test” and  可变参数宏 is== empty </p>
+
       
 
       
@@ -187,7 +197,163 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2020/05/19/GpuInterpreterSourceStudyone/">展开全文 >></a>
+          <a class="article-more-a" href="/2020/06/01/%E5%8F%AF%E5%8F%98%E5%8F%82%E6%95%B0%E5%AE%8F/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-sql索引" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/05/27/sql%E7%B4%A2%E5%BC%95/">sql索引</a>
+    </h1>
+  
+
+        
+        <a href="/2020/05/27/sql%E7%B4%A2%E5%BC%95/" class="archive-article-date">
+  	<time datetime="2020-05-27T03:08:27.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-05-27</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="索引："><a href="#索引：" class="headerlink" title="索引："></a>索引：</h2><ul>
+<li>在数据库中想要查询某一个条件如</li>
+</ul>
+<p>typedef  与 typenam</p>
+<pre><code class="c++">typedef  unsigned  char  uchar;
+
+typedef  uchar  uint8;
+
+typedef   uint8  TFlowPortId;
+
+typedef  unsigned  short  ushort;
+
+typePOINTdef  ushort  uint16;
+
+typedef  uint16  TFlowNodeId;
+
+typedef  unsigned  int   uint;
+
+typedef  uint  uint32;</code></pre>
+<p>_finddata_t    &lt;io.h&gt;</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">索引 (Indxe)</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/05/27/sql%E7%B4%A2%E5%BC%95/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-flex-bison" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/05/24/flex-bison/">flex bison</a>
+    </h1>
+  
+
+        
+        <a href="/2020/05/24/flex-bison/" class="archive-article-date">
+  	<time datetime="2020-05-24T04:16:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-05-24</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="bison-功能"><a href="#bison-功能" class="headerlink" title="bison : 功能"></a>bison : 功能</h1><p> bison和flex配合使用，可以将用户提供的语法规则转化为一个<strong><em>语法分析器</em></strong>。  <strong>bison的作用</strong>：通过产生式多次构造，最终得到一个动作表，然后利用这个动作表去解析句子。bison读取用户提供的语法产生式，生成一个C语言格式的动作表，并将其包含进一个名为<strong>yyparse()</strong>的C函数，这个函数的作用是利用这个动作表来解析token流，这个token流是由flex生成的词法分析器扫描源程序得到。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/05/24/flex-bison/">展开全文 >></a>
         </p>
       
 
@@ -267,266 +433,6 @@ mytime.add_hour(&amp;mytime,3)  //传递的时候系统会默认传递一个当�
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2020/05/16/inline%20const%20mutable%20this%20static%20/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-post-name" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/15/post-name/">post_name</a>
-    </h1>
-  
-
-        
-        <a href="/2020/05/15/post-name/" class="archive-article-date">
-  	<time datetime="2020-05-15T13:17:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-05-15</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/05/15/post-name/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-t1" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/14/t1/">t1</a>
-    </h1>
-  
-
-        
-        <a href="/2020/05/14/t1/" class="archive-article-date">
-  	<time datetime="2020-05-14T14:17:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-05-14</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>first tag </p>
-<pre><code class="c++">int a 
-printf;</code></pre>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/05/14/t1/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-article-title" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/14/article-title/">article title</a>
-    </h1>
-  
-
-        
-        <a href="/2020/05/14/article-title/" class="archive-article-date">
-  	<time datetime="2020-05-14T10:11:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-05-14</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/05/14/article-title/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-hello-world" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/14/hello-world/">Hello World</a>
-    </h1>
-  
-
-        
-        <a href="/2020/05/14/hello-world/" class="archive-article-date">
-  	<time datetime="2020-05-14T08:30:19.606Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-05-14</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre><code class="bash">$ hexo new &quot;My New Post&quot;</code></pre>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre><code class="bash">$ hexo server</code></pre>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre><code class="bash">$ hexo generate</code></pre>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre><code class="bash">$ hexo deploy</code></pre>
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/05/14/hello-world/">展开全文 >></a>
         </p>
       
 
@@ -647,6 +553,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
             <input type="checkbox" q-on="click:toggleTag(e)" q-attr="checked:showTags">
           </label>
           <ul class="article-tag-list" q-show="showTags">
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">索引 (Indxe)</a>
+              </li>
             
             <div class="clearfix"></div>
           </ul>

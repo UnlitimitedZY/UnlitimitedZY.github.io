@@ -6,17 +6,17 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>t1 | Hexo</title>
+  <title>可变参数宏 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="first tag  int a  printf;">
+  <meta name="description" content="为了在linux 打印输出调试定义了一个基于printf的简单的宏定义如下： #define IS_DEBUG 0 &#x2F;&#x2F;日志输出开关,当设置为0时,是关闭  #if(IS_PR) #define  J_PR(format, ...) \ printf(&quot;FUNCTION:&quot; __FUNCTION__&quot; LINE: %d: &quot;format&quot;&amp;quot">
 <meta property="og:type" content="article">
-<meta property="og:title" content="t1">
-<meta property="og:url" content="http://yoursite.com/2020/05/14/t1/index.html">
+<meta property="og:title" content="可变参数宏">
+<meta property="og:url" content="http://yoursite.com/2020/06/01/%E5%8F%AF%E5%8F%98%E5%8F%82%E6%95%B0%E5%AE%8F/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="first tag  int a  printf;">
+<meta property="og:description" content="为了在linux 打印输出调试定义了一个基于printf的简单的宏定义如下： #define IS_DEBUG 0 &#x2F;&#x2F;日志输出开关,当设置为0时,是关闭  #if(IS_PR) #define  J_PR(format, ...) \ printf(&quot;FUNCTION:&quot; __FUNCTION__&quot; LINE: %d: &quot;format&quot;&amp;quot">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2020-05-14T14:17:01.000Z">
-<meta property="article:modified_time" content="2020-05-14T14:34:13.502Z">
+<meta property="article:published_time" content="2020-06-01T03:02:14.000Z">
+<meta property="article:modified_time" content="2020-06-01T03:10:54.726Z">
 <meta property="article:author" content="Jasper Chou">
 <meta name="twitter:card" content="summary">
   
@@ -154,29 +154,39 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-t1" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-可变参数宏" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      t1
+      可变参数宏
     </h1>
   
 
         
-        <a href="/2020/05/14/t1/" class="archive-article-date">
-  	<time datetime="2020-05-14T14:17:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-05-14</time>
+        <a href="/2020/06/01/%E5%8F%AF%E5%8F%98%E5%8F%82%E6%95%B0%E5%AE%8F/" class="archive-article-date">
+  	<time datetime="2020-06-01T03:02:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-01</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>first tag </p>
-<pre><code class="c++">int a 
-printf;</code></pre>
+        <p>为了在linux 打印输出调试定义了一个基于printf的简单的宏定义如下：</p>
+<pre><code class="c++">#define IS_DEBUG 0 //日志输出开关,当设置为0时,是关闭
+
+#if(IS_PR)
+#define  J_PR(format, ...) \
+printf(&quot;FUNCTION:&quot; __FUNCTION__&quot; LINE: %d: &quot;format&quot;&quot;, __LINE__, ##__VA_ARGS__)
+#else
+#define  J_PR(format, ...)
+#endif</code></pre>
+<p>说明：##<em>VA_ARGS</em> _  其中##意思是，如果可变参数被忽略或为空，将使预处理器（ preprocessor ）去除掉它前面的那个逗号。</p>
+<p>format 代替的是如下结构</p>
+<p>（%s\n,”test”）;  ————-  format is “%s\n” and   可变参数宏_VA_ARGS  is “test”</p>
+<p>(“test”)  ;            ————— format ===”test” and  可变参数宏 is== empty </p>
 
       
 
@@ -256,7 +266,7 @@ printf;</code></pre>
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2020/05/14/t1/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2020/06/01/%E5%8F%AF%E5%8F%98%E5%8F%82%E6%95%B0%E5%AE%8F/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -270,18 +280,9 @@ printf;</code></pre>
   
 <nav id="article-nav">
   
-    <a href="/2020/05/15/post-name/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          post_name
-        
-      </div>
-    </a>
   
-  
-    <a href="/2020/05/14/article-title/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">article title</div>
+    <a href="/2020/05/27/sql%E7%B4%A2%E5%BC%95/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">sql索引</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -405,6 +406,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
             <input type="checkbox" q-on="click:toggleTag(e)" q-attr="checked:showTags">
           </label>
           <ul class="article-tag-list" q-show="showTags">
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">索引 (Indxe)</a>
+              </li>
             
             <div class="clearfix"></div>
           </ul>

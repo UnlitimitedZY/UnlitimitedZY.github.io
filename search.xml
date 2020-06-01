@@ -4,11 +4,43 @@
   
     
     <entry>
-      <title>GpuInterpreterSourceStudyone</title>
-      <link href="/2020/05/19/GpuInterpreterSourceStudyone/"/>
-      <url>/2020/05/19/GpuInterpreterSourceStudyone/</url>
+      <title>可变参数宏</title>
+      <link href="/2020/06/01/%E5%8F%AF%E5%8F%98%E5%8F%82%E6%95%B0%E5%AE%8F/"/>
+      <url>/2020/06/01/%E5%8F%AF%E5%8F%98%E5%8F%82%E6%95%B0%E5%AE%8F/</url>
       
-        <content type="html"><![CDATA[<h1 id="1-tuple"><a href="#1-tuple" class="headerlink" title="1.tuple"></a>1.tuple</h1><a id="more"></a><p>​         tuple 是元组的意思</p>]]></content>
+        <content type="html"><![CDATA[<p>为了在linux 打印输出调试定义了一个基于printf的简单的宏定义如下：</p><pre><code class="c++">#define IS_DEBUG 0 //日志输出开关,当设置为0时,是关闭#if(IS_PR)#define  J_PR(format, ...) \printf(&quot;FUNCTION:&quot; __FUNCTION__&quot; LINE: %d: &quot;format&quot;&quot;, __LINE__, ##__VA_ARGS__)#else#define  J_PR(format, ...)#endif</code></pre><p>说明：##<em>VA_ARGS</em> _  其中##意思是，如果可变参数被忽略或为空，将使预处理器（ preprocessor ）去除掉它前面的那个逗号。</p><p>format 代替的是如下结构</p><p>（%s\n,”test”）;  ————-  format is “%s\n” and   可变参数宏_VA_ARGS  is “test”</p><p>(“test”)  ;            ————— format ===”test” and  可变参数宏 is== empty </p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>sql索引</title>
+      <link href="/2020/05/27/sql%E7%B4%A2%E5%BC%95/"/>
+      <url>/2020/05/27/sql%E7%B4%A2%E5%BC%95/</url>
+      
+        <content type="html"><![CDATA[<h2 id="索引："><a href="#索引：" class="headerlink" title="索引："></a>索引：</h2><ul><li>在数据库中想要查询某一个条件如</li></ul><p>typedef  与 typenam</p><pre><code class="c++">typedef  unsigned  char  uchar;typedef  uchar  uint8;typedef   uint8  TFlowPortId;typedef  unsigned  short  ushort;typePOINTdef  ushort  uint16;typedef  uint16  TFlowNodeId;typedef  unsigned  int   uint;typedef  uint  uint32;</code></pre><p>_finddata_t    &lt;io.h&gt;</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> 索引 (Indxe) </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>flex bison</title>
+      <link href="/2020/05/24/flex-bison/"/>
+      <url>/2020/05/24/flex-bison/</url>
+      
+        <content type="html"><![CDATA[<h1 id="bison-功能"><a href="#bison-功能" class="headerlink" title="bison : 功能"></a>bison : 功能</h1><p> bison和flex配合使用，可以将用户提供的语法规则转化为一个<strong><em>语法分析器</em></strong>。  <strong>bison的作用</strong>：通过产生式多次构造，最终得到一个动作表，然后利用这个动作表去解析句子。bison读取用户提供的语法产生式，生成一个C语言格式的动作表，并将其包含进一个名为<strong>yyparse()</strong>的C函数，这个函数的作用是利用这个动作表来解析token流，这个token流是由flex生成的词法分析器扫描源程序得到。</p>]]></content>
       
       
       
@@ -22,58 +54,6 @@
       <url>/2020/05/16/inline%20const%20mutable%20this%20static%20/</url>
       
         <content type="html"><![CDATA[<h2 id="1-Const"><a href="#1-Const" class="headerlink" title="1.Const:"></a>1.Const:</h2><p>  1.1Const 在函数后面时候：表示这个函数不能更改类中的内容也就是成员变量。</p><p>  1.2 定义Const 对象： 只能调用Const 函数，非Const对象可以调用Const 函数和非Const 函数</p><h2 id="1-3-mutable（不稳定-容易改变的意思）与Const-相反-定义了mutable-成员函数-则const-成员函数中就能修改此成员函数"><a href="#1-3-mutable（不稳定-容易改变的意思）与Const-相反-定义了mutable-成员函数-则const-成员函数中就能修改此成员函数" class="headerlink" title="1.3 mutable（不稳定 容易改变的意思）与Const 相反 定义了mutable 成员函数 则const 成员函数中就能修改此成员函数"></a>1.3 mutable（不稳定 容易改变的意思）与Const 相反 定义了mutable 成员函数 则const 成员函数中就能修改此成员函数</h2><h2 id="2-this"><a href="#2-this" class="headerlink" title="2.this :"></a>2.this :</h2><p>2.1this  编译器负责把这个对象的地址传递给这个成员函数中的一个隐藏的this形参。对于系统来说关于成员的调用都是通过this来调用的是会是一种隐式调用。在普通函数中this相当于指向非const对象的const 指针（const * this）而在const 函数中代表（const Time *const 的this 类型的指针）</p><pre><code class="c++">//如下：class Time{    void add_hour(int h);};Time mytime;mytime.add_hour(&amp;mytime,3)  //传递的时候系统会默认传递一个当前的指针回去作为this指针                            //this 是一个系统的保留关键字不可显示调用.                            //静态函数和全局函数是不能使用this指针的</code></pre><h2 id="3-static"><a href="#3-static" class="headerlink" title="3.static"></a>3.static</h2><p>​    3.1局部静态变量和全局静态变量都保存在静态存储区都是默认不赋予初值的话系统会给予初值0.</p><p>​     3.2static 类成员  存在与整个类中 调用的时候是类名：：static成员变量名或者类名.static成员变量进行操作</p><p>​    3.3 static 类函数  调用是 类名：：static 类函数或者 类名.static 类函数 都可以使用。在静态成员函数中是不能修改非静态成员的值的</p><p>​     3.4类中的static声明了后要在cpp 中定义静态成员变量（在此时分配内存只能在一个cpp 中定义那不然重复定义）</p>]]></content>
-      
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>post_name</title>
-      <link href="/2020/05/15/post-name/"/>
-      <url>/2020/05/15/post-name/</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>t1</title>
-      <link href="/2020/05/14/t1/"/>
-      <url>/2020/05/14/t1/</url>
-      
-        <content type="html"><![CDATA[<p>first tag </p><pre><code class="c++">int a printf;</code></pre>]]></content>
-      
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>article title</title>
-      <link href="/2020/05/14/article-title/"/>
-      <url>/2020/05/14/article-title/</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>Hello World</title>
-      <link href="/2020/05/14/hello-world/"/>
-      <url>/2020/05/14/hello-world/</url>
-      
-        <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre><code class="bash">$ hexo new &quot;My New Post&quot;</code></pre><p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre><code class="bash">$ hexo server</code></pre><p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre><code class="bash">$ hexo generate</code></pre><p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre><code class="bash">$ hexo deploy</code></pre><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>]]></content>
       
       
       

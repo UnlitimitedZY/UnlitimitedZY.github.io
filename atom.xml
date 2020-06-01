@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2020-05-19T08:03:15.866Z</updated>
+  <updated>2020-06-01T03:10:54.726Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -17,17 +17,74 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>GpuInterpreterSourceStudyone</title>
-    <link href="http://yoursite.com/2020/05/19/GpuInterpreterSourceStudyone/"/>
-    <id>http://yoursite.com/2020/05/19/GpuInterpreterSourceStudyone/</id>
-    <published>2020-05-19T06:45:47.000Z</published>
-    <updated>2020-05-19T08:03:15.866Z</updated>
+    <title>可变参数宏</title>
+    <link href="http://yoursite.com/2020/06/01/%E5%8F%AF%E5%8F%98%E5%8F%82%E6%95%B0%E5%AE%8F/"/>
+    <id>http://yoursite.com/2020/06/01/%E5%8F%AF%E5%8F%98%E5%8F%82%E6%95%B0%E5%AE%8F/</id>
+    <published>2020-06-01T03:02:14.000Z</published>
+    <updated>2020-06-01T03:10:54.726Z</updated>
     
-    <content type="html"><![CDATA[<h1 id="1-tuple"><a href="#1-tuple" class="headerlink" title="1.tuple"></a>1.tuple</h1><a id="more"></a><p>​         tuple 是元组的意思</p>]]></content>
+    <content type="html"><![CDATA[<p>为了在linux 打印输出调试定义了一个基于printf的简单的宏定义如下：</p><pre><code class="c++">#define IS_DEBUG 0 //日志输出开关,当设置为0时,是关闭#if(IS_PR)#define  J_PR(format, ...) \printf(&quot;FUNCTION:&quot; __FUNCTION__&quot; LINE: %d: &quot;format&quot;&quot;, __LINE__, ##__VA_ARGS__)#else#define  J_PR(format, ...)#endif</code></pre><p>说明：##<em>VA_ARGS</em> _  其中##意思是，如果可变参数被忽略或为空，将使预处理器（ preprocessor ）去除掉它前面的那个逗号。</p><p>format 代替的是如下结构</p><p>（%s\n,”test”）;  ————-  format is “%s\n” and   可变参数宏_VA_ARGS  is “test”</p><p>(“test”)  ;            ————— format ===”test” and  可变参数宏 is== empty </p>]]></content>
     
     <summary type="html">
     
-      &lt;h1 id=&quot;1-tuple&quot;&gt;&lt;a href=&quot;#1-tuple&quot; class=&quot;headerlink&quot; title=&quot;1.tuple&quot;&gt;&lt;/a&gt;1.tuple&lt;/h1&gt;
+      
+      
+        &lt;p&gt;为了在linux 打印输出调试定义了一个基于printf的简单的宏定义如下：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;c++&quot;&gt;#define IS_DEBUG 0 //日志输出开关,当设置为0时,是关闭
+
+#if(IS_PR)
+#define  J_PR(format
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>sql索引</title>
+    <link href="http://yoursite.com/2020/05/27/sql%E7%B4%A2%E5%BC%95/"/>
+    <id>http://yoursite.com/2020/05/27/sql%E7%B4%A2%E5%BC%95/</id>
+    <published>2020-05-27T03:08:27.000Z</published>
+    <updated>2020-05-27T08:13:49.473Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="索引："><a href="#索引：" class="headerlink" title="索引："></a>索引：</h2><ul><li>在数据库中想要查询某一个条件如</li></ul><p>typedef  与 typenam</p><pre><code class="c++">typedef  unsigned  char  uchar;typedef  uchar  uint8;typedef   uint8  TFlowPortId;typedef  unsigned  short  ushort;typePOINTdef  ushort  uint16;typedef  uint16  TFlowNodeId;typedef  unsigned  int   uint;typedef  uint  uint32;</code></pre><p>_finddata_t    &lt;io.h&gt;</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2 id=&quot;索引：&quot;&gt;&lt;a href=&quot;#索引：&quot; class=&quot;headerlink&quot; title=&quot;索引：&quot;&gt;&lt;/a&gt;索引：&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;在数据库中想要查询某一个条件如&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;typedef  与 typenam&lt;/p&gt;
+&lt;pre&gt;&lt;c
+      
+    
+    </summary>
+    
+    
+    
+      <category term="索引 (Indxe)" scheme="http://yoursite.com/tags/%E7%B4%A2%E5%BC%95-Indxe/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>flex bison</title>
+    <link href="http://yoursite.com/2020/05/24/flex-bison/"/>
+    <id>http://yoursite.com/2020/05/24/flex-bison/</id>
+    <published>2020-05-24T04:16:15.000Z</published>
+    <updated>2020-05-24T14:45:49.454Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="bison-功能"><a href="#bison-功能" class="headerlink" title="bison : 功能"></a>bison : 功能</h1><p> bison和flex配合使用，可以将用户提供的语法规则转化为一个<strong><em>语法分析器</em></strong>。  <strong>bison的作用</strong>：通过产生式多次构造，最终得到一个动作表，然后利用这个动作表去解析句子。bison读取用户提供的语法产生式，生成一个C语言格式的动作表，并将其包含进一个名为<strong>yyparse()</strong>的C函数，这个函数的作用是利用这个动作表来解析token流，这个token流是由flex生成的词法分析器扫描源程序得到。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;bison-功能&quot;&gt;&lt;a href=&quot;#bison-功能&quot; class=&quot;headerlink&quot; title=&quot;bison : 功能&quot;&gt;&lt;/a&gt;bison : 功能&lt;/h1&gt;&lt;p&gt; bison和flex配合使用，可以将用户提供的语法规则转化为一个&lt;strong&gt;&lt;
+      
     
     </summary>
     
@@ -50,83 +107,6 @@
       
         &lt;h2 id=&quot;1-Const&quot;&gt;&lt;a href=&quot;#1-Const&quot; class=&quot;headerlink&quot; title=&quot;1.Const:&quot;&gt;&lt;/a&gt;1.Const:&lt;/h2&gt;&lt;p&gt;  1.1Const 在函数后面时候：表示这个函数不能更改类中的内容也就是成员变量。&lt;/p&gt;
 &lt;
-      
-    
-    </summary>
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title>post_name</title>
-    <link href="http://yoursite.com/2020/05/15/post-name/"/>
-    <id>http://yoursite.com/2020/05/15/post-name/</id>
-    <published>2020-05-15T13:17:43.000Z</published>
-    <updated>2020-05-15T13:17:43.225Z</updated>
-    
-    <summary type="html">
-    
-    </summary>
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title>t1</title>
-    <link href="http://yoursite.com/2020/05/14/t1/"/>
-    <id>http://yoursite.com/2020/05/14/t1/</id>
-    <published>2020-05-14T14:17:01.000Z</published>
-    <updated>2020-05-14T14:34:13.502Z</updated>
-    
-    <content type="html"><![CDATA[<p>first tag </p><pre><code class="c++">int a printf;</code></pre>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;first tag &lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;c++&quot;&gt;int a 
-printf;&lt;/code&gt;&lt;/pre&gt;
-
-      
-    
-    </summary>
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title>article title</title>
-    <link href="http://yoursite.com/2020/05/14/article-title/"/>
-    <id>http://yoursite.com/2020/05/14/article-title/</id>
-    <published>2020-05-14T10:11:24.000Z</published>
-    <updated>2020-05-14T10:11:24.406Z</updated>
-    
-    <summary type="html">
-    
-    </summary>
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title>Hello World</title>
-    <link href="http://yoursite.com/2020/05/14/hello-world/"/>
-    <id>http://yoursite.com/2020/05/14/hello-world/</id>
-    <published>2020-05-14T08:30:19.606Z</published>
-    <updated>2020-05-14T08:30:19.606Z</updated>
-    
-    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre><code class="bash">$ hexo new &quot;My New Post&quot;</code></pre><p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre><code class="bash">$ hexo server</code></pre><p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre><code class="bash">$ hexo generate</code></pre><p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre><code class="bash">$ hexo deploy</code></pre><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.
       
     
     </summary>

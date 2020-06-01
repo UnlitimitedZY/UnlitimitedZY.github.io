@@ -6,15 +6,17 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>post_name | Hexo</title>
+  <title>flex bison | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="article">
-<meta property="og:title" content="post_name">
-<meta property="og:url" content="http://yoursite.com/2020/05/15/post-name/index.html">
+  <meta name="description" content="bison : 功能 bison和flex配合使用，可以将用户提供的语法规则转化为一个语法分析器。  bison的作用：通过产生式多次构造，最终得到一个动作表，然后利用这个动作表去解析句子。bison读取用户提供的语法产生式，生成一个C语言格式的动作表，并将其包含进一个名为yyparse()的C函数，这个函数的作用是利用这个动作表来解析token流，这个token流是由flex生成的词法分析器扫描">
+<meta property="og:type" content="article">
+<meta property="og:title" content="flex bison">
+<meta property="og:url" content="http://yoursite.com/2020/05/24/flex-bison/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="bison : 功能 bison和flex配合使用，可以将用户提供的语法规则转化为一个语法分析器。  bison的作用：通过产生式多次构造，最终得到一个动作表，然后利用这个动作表去解析句子。bison读取用户提供的语法产生式，生成一个C语言格式的动作表，并将其包含进一个名为yyparse()的C函数，这个函数的作用是利用这个动作表来解析token流，这个token流是由flex生成的词法分析器扫描">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2020-05-15T13:17:43.000Z">
-<meta property="article:modified_time" content="2020-05-15T13:17:43.225Z">
+<meta property="article:published_time" content="2020-05-24T04:16:15.000Z">
+<meta property="article:modified_time" content="2020-05-24T14:45:49.454Z">
 <meta property="article:author" content="Jasper Chou">
 <meta name="twitter:card" content="summary">
   
@@ -152,27 +154,28 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-post-name" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-flex-bison" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      post_name
+      flex bison
     </h1>
   
 
         
-        <a href="/2020/05/15/post-name/" class="archive-article-date">
-  	<time datetime="2020-05-15T13:17:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-05-15</time>
+        <a href="/2020/05/24/flex-bison/" class="archive-article-date">
+  	<time datetime="2020-05-24T04:16:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-05-24</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <h1 id="bison-功能"><a href="#bison-功能" class="headerlink" title="bison : 功能"></a>bison : 功能</h1><p> bison和flex配合使用，可以将用户提供的语法规则转化为一个<strong><em>语法分析器</em></strong>。  <strong>bison的作用</strong>：通过产生式多次构造，最终得到一个动作表，然后利用这个动作表去解析句子。bison读取用户提供的语法产生式，生成一个C语言格式的动作表，并将其包含进一个名为<strong>yyparse()</strong>的C函数，这个函数的作用是利用这个动作表来解析token流，这个token流是由flex生成的词法分析器扫描源程序得到。</p>
+
       
 
       
@@ -251,7 +254,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2020/05/15/post-name/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2020/05/24/flex-bison/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -265,18 +268,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2020/05/16/inline%20const%20mutable%20this%20static%20/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2020/05/27/sql%E7%B4%A2%E5%BC%95/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          inline const mutable this static 
+          sql索引
         
       </div>
     </a>
   
   
-    <a href="/2020/05/14/t1/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">t1</div>
+    <a href="/2020/05/16/inline%20const%20mutable%20this%20static%20/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">inline const mutable this static </div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -400,6 +403,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
             <input type="checkbox" q-on="click:toggleTag(e)" q-attr="checked:showTags">
           </label>
           <ul class="article-tag-list" q-show="showTags">
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">索引 (Indxe)</a>
+              </li>
             
             <div class="clearfix"></div>
           </ul>
