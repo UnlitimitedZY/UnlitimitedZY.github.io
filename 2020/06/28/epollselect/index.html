@@ -6,18 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>可变参数宏 | Hexo</title>
+  <title>epollselect | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="为了在linux 打印输出调试定义了一个基于printf的简单的宏定义如下： #define IS_DEBUG 0 &#x2F;&#x2F;日志输出开关,当设置为0时,是关闭  #if(IS_PR) #define  J_PR(format, ...) \ printf(&quot;FUNCTION:&quot; __FUNCTION__&quot; LINE: %d: &quot;format&quot;&amp;quot">
+  <meta name="description" content="为什么要用select和epoll当需要确定io是否有数据的时候那这个时候没有 select和epoll 的多路复用技术那要想实现这个功能。 方法如下： ​      1  直接recv 函数去接受所有io  ​       2 每个io会单独开个线程 缺点： 网络io中就算1000个io也就只会有1000个有数据 因此上面两种方法效率很低因此需要多路复用技术。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="可变参数宏">
-<meta property="og:url" content="http://yoursite.com/2020/06/01/%E5%8F%AF%E5%8F%98%E5%8F%82%E6%95%B0%E5%AE%8F/index.html">
+<meta property="og:title" content="epollselect">
+<meta property="og:url" content="http://yoursite.com/2020/06/28/epollselect/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="为了在linux 打印输出调试定义了一个基于printf的简单的宏定义如下： #define IS_DEBUG 0 &#x2F;&#x2F;日志输出开关,当设置为0时,是关闭  #if(IS_PR) #define  J_PR(format, ...) \ printf(&quot;FUNCTION:&quot; __FUNCTION__&quot; LINE: %d: &quot;format&quot;&amp;quot">
+<meta property="og:description" content="为什么要用select和epoll当需要确定io是否有数据的时候那这个时候没有 select和epoll 的多路复用技术那要想实现这个功能。 方法如下： ​      1  直接recv 函数去接受所有io  ​       2 每个io会单独开个线程 缺点： 网络io中就算1000个io也就只会有1000个有数据 因此上面两种方法效率很低因此需要多路复用技术。">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2020-06-01T03:02:14.000Z">
-<meta property="article:modified_time" content="2020-06-01T03:10:54.726Z">
+<meta property="article:published_time" content="2020-06-28T15:06:48.000Z">
+<meta property="article:modified_time" content="2020-06-29T01:23:54.310Z">
 <meta property="article:author" content="Jasper Chou">
+<meta property="article:tag" content="epoll Select">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
@@ -154,39 +155,31 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-可变参数宏" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-epollselect" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      可变参数宏
+      epollselect
     </h1>
   
 
         
-        <a href="/2020/06/01/%E5%8F%AF%E5%8F%98%E5%8F%82%E6%95%B0%E5%AE%8F/" class="archive-article-date">
-  	<time datetime="2020-06-01T03:02:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-01</time>
+        <a href="/2020/06/28/epollselect/" class="archive-article-date">
+  	<time datetime="2020-06-28T15:06:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-28</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>为了在linux 打印输出调试定义了一个基于printf的简单的宏定义如下：</p>
-<pre><code class="c++">#define IS_DEBUG 0 //日志输出开关,当设置为0时,是关闭
-
-#if(IS_PR)
-#define  J_PR(format, ...) \
-printf(&quot;FUNCTION:&quot; __FUNCTION__&quot; LINE: %d: &quot;format&quot;&quot;, __LINE__, ##__VA_ARGS__)
-#else
-#define  J_PR(format, ...)
-#endif</code></pre>
-<p>说明：##<em>VA_ARGS</em> _  其中##意思是，如果可变参数被忽略或为空，将使预处理器（ preprocessor ）去除掉它前面的那个逗号。</p>
-<p>format 代替的是如下结构</p>
-<p>（%s\n,”test”）;  ————-  format is “%s\n” and   可变参数宏_VA_ARGS  is “test”</p>
-<p>(“test”)  ;            ————— format ===”test” and  可变参数宏 is== empty </p>
+        <h2 id="为什么要用select和epoll"><a href="#为什么要用select和epoll" class="headerlink" title="为什么要用select和epoll"></a>为什么要用select和epoll</h2><p>当需要确定io是否有数据的时候那这个时候没有 select和epoll 的多路复用技术那要想实现这个功能。</p>
+<p>方法如下：</p>
+<p>​      1  直接recv 函数去接受所有io </p>
+<p>​       2 每个io会单独开个线程</p>
+<p>缺点： 网络io中就算1000个io也就只会有1000个有数据 因此上面两种方法效率很低因此需要多路复用技术。</p>
 
       
 
@@ -216,6 +209,17 @@ printf(&quot;FUNCTION:&quot; __FUNCTION__&quot; LINE: %d: &quot;format&quot;&quo
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">epoll Select</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
 
       
@@ -266,7 +270,7 @@ printf(&quot;FUNCTION:&quot; __FUNCTION__&quot; LINE: %d: &quot;format&quot;&quo
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2020/06/01/%E5%8F%AF%E5%8F%98%E5%8F%82%E6%95%B0%E5%AE%8F/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2020/06/28/epollselect/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -280,18 +284,18 @@ printf(&quot;FUNCTION:&quot; __FUNCTION__&quot; LINE: %d: &quot;format&quot;&quo
   
 <nav id="article-nav">
   
-    <a href="/2020/06/01/cuda/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2020/06/30/%E5%B9%B6%E5%8F%91%E5%B9%B6%E8%A1%8C/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          cuda
+          并发并行
         
       </div>
     </a>
   
   
-    <a href="/2020/05/27/sql%E7%B4%A2%E5%BC%95/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">sql索引</div>
+    <a href="/2020/06/20/%E6%9F%A5%E6%BC%8F%E8%A1%A5%E7%BC%BA/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">查漏补缺</div>
       <i class="icon-circle-right"></i>
     </a>
   

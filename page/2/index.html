@@ -6,17 +6,13 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>可变参数宏 | Hexo</title>
+  <title>Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="为了在linux 打印输出调试定义了一个基于printf的简单的宏定义如下： #define IS_DEBUG 0 &#x2F;&#x2F;日志输出开关,当设置为0时,是关闭  #if(IS_PR) #define  J_PR(format, ...) \ printf(&quot;FUNCTION:&quot; __FUNCTION__&quot; LINE: %d: &quot;format&quot;&amp;quot">
-<meta property="og:type" content="article">
-<meta property="og:title" content="可变参数宏">
-<meta property="og:url" content="http://yoursite.com/2020/06/01/%E5%8F%AF%E5%8F%98%E5%8F%82%E6%95%B0%E5%AE%8F/index.html">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://yoursite.com/page/2/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="为了在linux 打印输出调试定义了一个基于printf的简单的宏定义如下： #define IS_DEBUG 0 &#x2F;&#x2F;日志输出开关,当设置为0时,是关闭  #if(IS_PR) #define  J_PR(format, ...) \ printf(&quot;FUNCTION:&quot; __FUNCTION__&quot; LINE: %d: &quot;format&quot;&amp;quot">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2020-06-01T03:02:14.000Z">
-<meta property="article:modified_time" content="2020-06-01T03:10:54.726Z">
 <meta property="article:author" content="Jasper Chou">
 <meta name="twitter:card" content="summary">
   
@@ -154,14 +150,117 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-可变参数宏" class="article article-type-post " itemscope itemprop="blogPost">
+            
+  
+    <article id="post-cuda" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
-    <h1 class="article-title" itemprop="name">
-      可变参数宏
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/01/cuda/">cuda</a>
+    </h1>
+  
+
+        
+        <a href="/2020/06/01/cuda/" class="archive-article-date">
+  	<time datetime="2020-06-01T05:50:33.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-01</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>CUDA </p>
+<h2 id="CUDA的线程模型："><a href="#CUDA的线程模型：" class="headerlink" title="CUDA的线程模型："></a>CUDA的线程模型：</h2><p><img src="/2020/06/01/cuda/%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B.jpg" alt="你想输入的替代文字"></p>
+<p>如图可以看到，每个线程有自己的私有本地内存（Local Memory），而每个线程块有包含共享内存（Shared Memory）,可以被线程块中所有线程共享，其生命周期与线程块一致。此外，所有的线程都可以访问全局内存（Global Memory）。还可以访问一些只读内存块：常量内存（Constant Memory）和纹理内存（Texture Memory）。内存结构涉及到程序优化，这里不深入探讨它们。</p>
+<p><strong><em>在vector（矢量相加的时候）计算出每个线程索引的目的是为了指定每个线程负责处理每个位置的两个元素相加</em></strong>，从上面的图中更容易能理解。通过相关计算算出tid 比如是第一个Thread(0,0)的地址的时候会从相关的内存如Global Memory 中去那相对应的小标的数据放到自己的线程中去执行。</p>
+<h2 id="关于GPU-核调用"><a href="#关于GPU-核调用" class="headerlink" title="关于GPU 核调用"></a>关于GPU 核调用</h2><p>1.add&lt;&lt;&lt;N,1&gt;&gt;&gt; （）代表 N 代表启动的并行线程快 ，1代表在CUDA运行时在每个线程快中创建的线程的数量。</p>
+<p>2.总共启动的线程数量公式如下</p>
+<p>N 个线程快* 1个线程/线程快 = N个并行线程</p>
+<p>3.在GPU中硬件会将线程快的数量限制为不超过65535，最大的线程数量是不超过设备属性结构中的maxThreadsPerBlock域的值，一般对于当前的处理器而言这个线程快是512个线程。因此当超过这个线程的计算的时候要将线程和线程块结合起来才能实现。</p>
+<p>4.在其中每个块中的线程不能超过512个最大线程限制，所以当要并行执行的线程数N 大于512时候就需要进行分块和分线程配合使用。有一种方法是固定每个块中线程的数目然后通过，比如限制每一个线程块的线程为128则此时可以计算出有多少个线程块，通过N/128 就可以计算出线程块，这样就能启动了N个线程同时运行。当然当N = 127 则代表0个线程为了避免这个问题可以<strong><u>（N+127）/128</u></strong> 的方式相当于求出大于等于N的128最小倍数，采用这个公式计算出线程块。（调用时候 kern &lt;&lt;&lt;(（N+127）/128,128)&gt;&gt;&gt;）();)</p>
+<p>​    但是有时候N很大时候会开启过多的线程则此时需要管理取的线程如下：</p>
+<pre><code class="c++"> //如果启动N个线程：
+ int tid = threadIdx.x + blockIdx.x * blockDim.x;   
+ //可以通过tid 取得的线程数来进行去线程的控制 tid 代表已经开了几个线程并行了
+ if(tid &lt; N)               //代表如果当前的取得的线程数目&lt; 总共要启动的线程数字N 
+     c[tid] = a[tid] + b[tid];</code></pre>
+<h2 id="问题：为什么需要计算线索引：下面的两个函数有区别嘛"><a href="#问题：为什么需要计算线索引：下面的两个函数有区别嘛" class="headerlink" title="问题：为什么需要计算线索引：下面的两个函数有区别嘛"></a>问题：为什么需要计算线索引：下面的两个函数有区别嘛</h2><pre><code class="cuda">  __global__ void add(int *a, int *b, int *c){
+      int tid = blockIdx.x;            //why should tid?  
+      if(tid &lt; N)                      
+      c[tid] = a[tid] + b[tid];        //tid is must?
+    }
+
+  int count_dev = 0;
+ __global__ void add(int *a, int *b, int *c){
+      int tid = blockIdx.x;            //why should tid?  
+      if(count_dev&lt; N)                      
+      c[count_dev] = a[count_dev] + b[count_dev];        //tid is must?
+      count_dev ++;}</code></pre>
+<h2 id="问题：关于tid-blockDim-x-gridDim-x-的使用是什么情况"><a href="#问题：关于tid-blockDim-x-gridDim-x-的使用是什么情况" class="headerlink" title="问题：关于tid += blockDim.x * gridDim.x 的使用是什么情况"></a>问题：关于tid += blockDim.x * gridDim.x 的使用是什么情况</h2><p><img src="/2020/06/01/cuda/1.png" alt="你想输入的替代文字"></p>
+<pre><code></code></pre>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">CUDA</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/06/01/cuda/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-可变参数宏" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/01/%E5%8F%AF%E5%8F%98%E5%8F%82%E6%95%B0%E5%AE%8F/">可变参数宏</a>
     </h1>
   
 
@@ -191,27 +290,6 @@ printf(&quot;FUNCTION:&quot; __FUNCTION__&quot; LINE: %d: &quot;format&quot;&quo
       
 
       
-        <div class="page-reward">
-          <a href="javascript:;" class="page-reward-btn tooltip-top">
-            <div class="tooltip tooltip-east">
-            <span class="tooltip-item">
-              赏
-            </span>
-            <span class="tooltip-content">
-              <span class="tooltip-text">
-                <span class="tooltip-inner">
-                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
-                  <div class="reward-box">
-                    
-                    
-                  </div>
-                </span>
-              </span>
-            </span>
-          </div>
-          </a>
-        </div>
-      
     </div>
     <div class="article-info article-info-index">
       
@@ -219,84 +297,16 @@ printf(&quot;FUNCTION:&quot; __FUNCTION__&quot; LINE: %d: &quot;format&quot;&quo
       
 
       
-
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/06/01/%E5%8F%AF%E5%8F%98%E5%8F%82%E6%95%B0%E5%AE%8F/">展开全文 >></a>
+        </p>
       
-        
-<div class="share-btn share-icons tooltip-left">
-  <div class="tooltip tooltip-east">
-    <span class="tooltip-item">
-      <a href="javascript:;" class="share-sns share-outer">
-        <i class="icon icon-share"></i>
-      </a>
-    </span>
-    <span class="tooltip-content">
-      <div class="share-wrap">
-        <div class="share-icons">
-          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
-            <i class="icon icon-weibo"></i>
-          </a>
-          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
-            <i class="icon icon-weixin"></i>
-          </a>
-          <a class="qq share-sns" href="javascript:;" data-type="qq">
-            <i class="icon icon-qq"></i>
-          </a>
-          <a class="douban share-sns" href="javascript:;" data-type="douban">
-            <i class="icon icon-douban"></i>
-          </a>
-          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
-            <i class="icon icon-qzone"></i>
-          </a>
-          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
-            <i class="icon icon-facebook"></i>
-          </a>
-          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
-            <i class="icon icon-twitter"></i>
-          </a>
-          <a class="google share-sns" href="javascript:;" data-type="google">
-            <i class="icon icon-google"></i>
-          </a>
-        </div>
-      </div>
-    </span>
-  </div>
-</div>
 
-<div class="page-modal wx-share js-wx-box">
-    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
-    <p>扫一扫，分享到微信</p>
-    <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2020/06/01/%E5%8F%AF%E5%8F%98%E5%8F%82%E6%95%B0%E5%AE%8F/" alt="微信分享二维码">
-    </div>
-</div>
-
-<div class="mask js-mask"></div>
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
-
-  
-<nav id="article-nav">
-  
-    <a href="/2020/06/01/cuda/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          cuda
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2020/05/27/sql%E7%B4%A2%E5%BC%95/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">sql索引</div>
-      <i class="icon-circle-right"></i>
-    </a>
-  
-</nav>
-
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -316,14 +326,247 @@ printf(&quot;FUNCTION:&quot; __FUNCTION__&quot; LINE: %d: &quot;format&quot;&quo
 
 
 
-  
-  
-  
 
   
-
+    <article id="post-sql索引" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/05/27/sql%E7%B4%A2%E5%BC%95/">sql索引</a>
+    </h1>
   
 
+        
+        <a href="/2020/05/27/sql%E7%B4%A2%E5%BC%95/" class="archive-article-date">
+  	<time datetime="2020-05-27T03:08:27.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-05-27</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="索引："><a href="#索引：" class="headerlink" title="索引："></a>索引：</h2><ul>
+<li>在数据库中想要查询某一个条件如</li>
+</ul>
+<p>typedef  与 typenam</p>
+<pre><code class="c++">typedef  unsigned  char  uchar;
+
+typedef  uchar  uint8;
+
+typedef   uint8  TFlowPortId;
+
+typedef  unsigned  short  ushort;
+
+typePOINTdef  ushort  uint16;
+
+typedef  uint16  TFlowNodeId;
+
+typedef  unsigned  int   uint;
+
+typedef  uint  uint32;</code></pre>
+<p>_finddata_t    &lt;io.h&gt;</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">索引 (Indxe)</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/05/27/sql%E7%B4%A2%E5%BC%95/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-flex-bison" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/05/24/flex-bison/">flex bison</a>
+    </h1>
+  
+
+        
+        <a href="/2020/05/24/flex-bison/" class="archive-article-date">
+  	<time datetime="2020-05-24T04:16:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-05-24</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="bison-功能"><a href="#bison-功能" class="headerlink" title="bison : 功能"></a>bison : 功能</h1><p> bison和flex配合使用，可以将用户提供的语法规则转化为一个<strong><em>语法分析器</em></strong>。  <strong>bison的作用</strong>：通过产生式多次构造，最终得到一个动作表，然后利用这个动作表去解析句子。bison读取用户提供的语法产生式，生成一个C语言格式的动作表，并将其包含进一个名为<strong>yyparse()</strong>的C函数，这个函数的作用是利用这个动作表来解析token流，这个token流是由flex生成的词法分析器扫描源程序得到。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/05/24/flex-bison/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-inline const mutable this static " class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/05/16/inline%20const%20mutable%20this%20static%20/">inline const mutable this static </a>
+    </h1>
+  
+
+        
+        <a href="/2020/05/16/inline%20const%20mutable%20this%20static%20/" class="archive-article-date">
+  	<time datetime="2020-05-16T01:00:00.465Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-05-16</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-Const"><a href="#1-Const" class="headerlink" title="1.Const:"></a>1.Const:</h2><p>  1.1Const 在函数后面时候：表示这个函数不能更改类中的内容也就是成员变量。</p>
+<p>  1.2 定义Const 对象： 只能调用Const 函数，非Const对象可以调用Const 函数和非Const 函数</p>
+<h2 id="1-3-mutable（不稳定-容易改变的意思）与Const-相反-定义了mutable-成员函数-则const-成员函数中就能修改此成员函数"><a href="#1-3-mutable（不稳定-容易改变的意思）与Const-相反-定义了mutable-成员函数-则const-成员函数中就能修改此成员函数" class="headerlink" title="1.3 mutable（不稳定 容易改变的意思）与Const 相反 定义了mutable 成员函数 则const 成员函数中就能修改此成员函数"></a>1.3 mutable（不稳定 容易改变的意思）与Const 相反 定义了mutable 成员函数 则const 成员函数中就能修改此成员函数</h2><h2 id="2-this"><a href="#2-this" class="headerlink" title="2.this :"></a>2.this :</h2><p>2.1this  编译器负责把这个对象的地址传递给这个成员函数中的一个隐藏的this形参。对于系统来说关于成员的调用都是通过this来调用的是会是一种隐式调用。在普通函数中this相当于指向非const对象的const 指针（const * this）而在const 函数中代表（const Time *const 的this 类型的指针）</p>
+<pre><code class="c++">//如下：
+class Time
+{
+    void add_hour(int h);
+};
+Time mytime;
+mytime.add_hour(&amp;mytime,3)  //传递的时候系统会默认传递一个当前的指针回去作为this指针
+                            //this 是一个系统的保留关键字不可显示调用.
+                            //静态函数和全局函数是不能使用this指针的
+</code></pre>
+<h2 id="3-static"><a href="#3-static" class="headerlink" title="3.static"></a>3.static</h2><p>​    3.1局部静态变量和全局静态变量都保存在静态存储区都是默认不赋予初值的话系统会给予初值0.</p>
+<p>​     3.2static 类成员  存在与整个类中 调用的时候是类名：：static成员变量名或者类名.static成员变量进行操作</p>
+<p>​    3.3 static 类函数  调用是 类名：：static 类函数或者 类名.static 类函数 都可以使用。在静态成员函数中是不能修改非静态成员的值的</p>
+<p>​     3.4类中的static声明了后要在cpp 中定义静态成员变量（在此时分配内存只能在一个cpp 中定义那不然重复定义）</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/05/16/inline%20const%20mutable%20this%20static%20/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+  
+    <nav id="page-nav">
+      <a class="extend prev" rel="prev" href="/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    </nav>
   
 
 
@@ -346,8 +589,8 @@ printf(&quot;FUNCTION:&quot; __FUNCTION__&quot; LINE: %d: &quot;format&quot;&quo
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: false,
-		isPost: true,
+		isHome: true,
+		isPost: false,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,

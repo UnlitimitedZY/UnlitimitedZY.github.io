@@ -6,18 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>可变参数宏 | Hexo</title>
+  <title>letCode | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="为了在linux 打印输出调试定义了一个基于printf的简单的宏定义如下： #define IS_DEBUG 0 &#x2F;&#x2F;日志输出开关,当设置为0时,是关闭  #if(IS_PR) #define  J_PR(format, ...) \ printf(&quot;FUNCTION:&quot; __FUNCTION__&quot; LINE: %d: &quot;format&quot;&amp;quot">
+  <meta name="description" content="题目描述：学校在拍年度纪念照时，一般要求学生按照 非递减 的高度顺序排列。 请你返回能让所有学生以 非递减 高度排列的最小必要移动人数。 注意，当一组学生被选中时，他们之间可以以任何可能的方式重新排序，而未被选中的学生应该保持不动。 来源：力扣（LeetCode）链接：https:&#x2F;&#x2F;leetcode-cn.com&#x2F;problems&#x2F;height-checker 示例： 输入：heights &#x3D;">
 <meta property="og:type" content="article">
-<meta property="og:title" content="可变参数宏">
-<meta property="og:url" content="http://yoursite.com/2020/06/01/%E5%8F%AF%E5%8F%98%E5%8F%82%E6%95%B0%E5%AE%8F/index.html">
+<meta property="og:title" content="letCode">
+<meta property="og:url" content="http://yoursite.com/2020/07/24/letCode1/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="为了在linux 打印输出调试定义了一个基于printf的简单的宏定义如下： #define IS_DEBUG 0 &#x2F;&#x2F;日志输出开关,当设置为0时,是关闭  #if(IS_PR) #define  J_PR(format, ...) \ printf(&quot;FUNCTION:&quot; __FUNCTION__&quot; LINE: %d: &quot;format&quot;&amp;quot">
+<meta property="og:description" content="题目描述：学校在拍年度纪念照时，一般要求学生按照 非递减 的高度顺序排列。 请你返回能让所有学生以 非递减 高度排列的最小必要移动人数。 注意，当一组学生被选中时，他们之间可以以任何可能的方式重新排序，而未被选中的学生应该保持不动。 来源：力扣（LeetCode）链接：https:&#x2F;&#x2F;leetcode-cn.com&#x2F;problems&#x2F;height-checker 示例： 输入：heights &#x3D;">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2020-06-01T03:02:14.000Z">
-<meta property="article:modified_time" content="2020-06-01T03:10:54.726Z">
+<meta property="article:published_time" content="2020-07-24T07:55:52.000Z">
+<meta property="article:modified_time" content="2020-07-24T08:12:53.264Z">
 <meta property="article:author" content="Jasper Chou">
+<meta property="article:tag" content="letCode 数组">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
@@ -154,39 +155,81 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-可变参数宏" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-letCode1" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      可变参数宏
+      letCode
     </h1>
   
 
         
-        <a href="/2020/06/01/%E5%8F%AF%E5%8F%98%E5%8F%82%E6%95%B0%E5%AE%8F/" class="archive-article-date">
-  	<time datetime="2020-06-01T03:02:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-01</time>
+        <a href="/2020/07/24/letCode1/" class="archive-article-date">
+  	<time datetime="2020-07-24T07:55:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-24</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>为了在linux 打印输出调试定义了一个基于printf的简单的宏定义如下：</p>
-<pre><code class="c++">#define IS_DEBUG 0 //日志输出开关,当设置为0时,是关闭
+        <h1 id="题目描述："><a href="#题目描述：" class="headerlink" title="题目描述："></a>题目描述：</h1><p>学校在拍年度纪念照时，一般要求学生按照 非递减 的高度顺序排列。</p>
+<p>请你返回能让所有学生以 非递减 高度排列的最小必要移动人数。</p>
+<p>注意，当一组学生被选中时，他们之间可以以任何可能的方式重新排序，而未被选中的学生应该保持不动。</p>
+<p>来源：力扣（LeetCode）<br>链接：<a href="https://leetcode-cn.com/problems/height-checker" target="_blank" rel="noopener">https://leetcode-cn.com/problems/height-checker</a></p>
+<p>示例：</p>
+<p>输入：heights = [1,1,4,2,1,3]<br>输出：3<br>解释：<br>当前数组：[1,1,4,2,1,3]<br>目标数组：[1,1,1,2,3,4]<br>在下标 2 处（从 0 开始计数）出现 4 vs 1 ，所以我们必须移动这名学生。<br>在下标 4 处（从 0 开始计数）出现 1 vs 3 ，所以我们必须移动这名学生。<br>在下标 5 处（从 0 开始计数）出现 3 vs 4 ，所以我们必须移动这名学生。</p>
+<pre><code>这道题目中有疑惑点会造成困扰：.关于示例中的4vs1 就一开混淆以为是和原表进行比对，没想到是和上面的两个数组两两比。
+题目中其实意思是就是比较刷选后和筛选前的数进行对比看几个不一样，文件描述太绕了</code></pre><p>知道问题点之后就简单了先排序之后再进行比对：</p>
+<h2 id="第一种解法"><a href="#第一种解法" class="headerlink" title="第一种解法"></a>第一种解法</h2><p>对与c++ 可以时候Vector 进行数组容器存储这样很方便比对。</p>
+<pre><code class="c++">class Solution {
+public:
+    int heightChecker(vector&lt;int&gt;&amp; heights) {
+        int size = heights.size();
+        vector&lt;int&gt; vec(heights);   // 这很方便
+        sort(vec.begin(), vec.end());  //自己关于库函数使用很少以后要多使用
+        int i = 0;
+        int j = 0;
+        int count = 0;
+        for(i = 0, j = 0; i &lt; size, j &lt; size; i++, j++)  //实验下双小标使用
+        {
+            if(heights[i] != vec[j])
+            {
+                ++count;
+            }
+        }
+        return count;
+    }
+};
 
-#if(IS_PR)
-#define  J_PR(format, ...) \
-printf(&quot;FUNCTION:&quot; __FUNCTION__&quot; LINE: %d: &quot;format&quot;&quot;, __LINE__, ##__VA_ARGS__)
-#else
-#define  J_PR(format, ...)
-#endif</code></pre>
-<p>说明：##<em>VA_ARGS</em> _  其中##意思是，如果可变参数被忽略或为空，将使预处理器（ preprocessor ）去除掉它前面的那个逗号。</p>
-<p>format 代替的是如下结构</p>
-<p>（%s\n,”test”）;  ————-  format is “%s\n” and   可变参数宏_VA_ARGS  is “test”</p>
-<p>(“test”)  ;            ————— format ===”test” and  可变参数宏 is== empty </p>
+</code></pre>
+<p>第二种解法：</p>
+<p>直接冒泡排序再检测： c ：（冒泡逐个相临比对排出最大或者最小：如1和2比 ，2和3比， 3和4比）</p>
+<pre><code class="c">int heightChecker(int* heights, int heightsSize){
+    int *add=calloc(heightsSize,sizeof(int));
+    int i,j,temp,num=0;
+    for(i=0;i&lt;heightsSize;i++){
+        add[i]=heights[i];
+    }
+    for(i=0;i&lt;heightsSize;i++){       //代表比较次数
+        for(j=0;j&lt;heightsSize-i-1;j++){ //代表每次比对
+            if(heights[j]&gt;heights[j+1]){   //冒泡
+                temp=heights[j];
+                heights[j]=heights[j+1];
+                heights[j+1]=temp;
+            }
+        }
+    }
+    for(i=0;i&lt;heightsSize;i++){
+        if(add[i]!=heights[i])
+            num++;
+    }
+    return num;
+}
+
+</code></pre>
 
       
 
@@ -216,6 +259,17 @@ printf(&quot;FUNCTION:&quot; __FUNCTION__&quot; LINE: %d: &quot;format&quot;&quo
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">letCode 数组</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
 
       
@@ -266,7 +320,7 @@ printf(&quot;FUNCTION:&quot; __FUNCTION__&quot; LINE: %d: &quot;format&quot;&quo
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2020/06/01/%E5%8F%AF%E5%8F%98%E5%8F%82%E6%95%B0%E5%AE%8F/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2020/07/24/letCode1/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -280,18 +334,9 @@ printf(&quot;FUNCTION:&quot; __FUNCTION__&quot; LINE: %d: &quot;format&quot;&quo
   
 <nav id="article-nav">
   
-    <a href="/2020/06/01/cuda/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          cuda
-        
-      </div>
-    </a>
   
-  
-    <a href="/2020/05/27/sql%E7%B4%A2%E5%BC%95/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">sql索引</div>
+    <a href="/2020/06/30/%E5%B9%B6%E5%8F%91%E5%B9%B6%E8%A1%8C/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">并发并行</div>
       <i class="icon-circle-right"></i>
     </a>
   
