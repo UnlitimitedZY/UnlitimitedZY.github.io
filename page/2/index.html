@@ -152,6 +152,238 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-CUDA-执行模型" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/09/CUDA-%E6%89%A7%E8%A1%8C%E6%A8%A1%E5%9E%8B/">CUDA 执行模型</a>
+    </h1>
+  
+
+        
+        <a href="/2020/06/09/CUDA-%E6%89%A7%E8%A1%8C%E6%A8%A1%E5%9E%8B/" class="archive-article-date">
+  	<time datetime="2020-06-09T15:02:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-09</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="CUDA-执行模型"><a href="#CUDA-执行模型" class="headerlink" title="CUDA  执行模型"></a>CUDA  执行模型</h1><p>目标理解关于cuda中关于其模型内部架构等方面</p>
+<p>GPU 中的有多SM 每个SM 单元能支持数百个线程的并发执行，所以一个GPU上并发执行数千个线程是有可能的。当启动一个内核网格时，它的线程被分配到可用的SM上进行执行，线程快一旦被调度到SM上，其中的线程只会在那个指定的SM上并发执行，多个线程块可能被分配到一个SM上，而且是根据SM资源的可用性调度的。同一个线程中的指令利用指令级并行进行流水线化。</p>
+<p>CUDA 是采用单指令多线程（SIMY）架构来管理和执行线程。SIMT 中每个线程束中的所有线程在相同的程序地址上可以同时的开始执行，但是单独的线程任然有可能又不同的行为。（可以确保可以编写独立的线程并行代码）</p>
+<p>在SIMT 中每个线程都：</p>
+<ol>
+<li><u><strong>有独立的执行路径</strong></u></li>
+<li><u><strong>有自己的指令地址计数器</strong></u></li>
+<li><u><strong>有自己的寄存器状态</strong></u></li>
+</ol>
+<p>线程束是（warp）一个32个线程为一组的，warp里每个线程都是可以同时执行相同的指令。每个线程都有自己的指令地址计数器和寄存器状态，并利用自身的数据执行当前的指令。每个SM都将分配给它的线块分配到32个warp中，然后再可用户的硬件资源上调度执行。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">CUDA 执行模型</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/06/09/CUDA-%E6%89%A7%E8%A1%8C%E6%A8%A1%E5%9E%8B/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-信号学习" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/05/%E4%BF%A1%E5%8F%B7%E5%AD%A6%E4%B9%A0/">信号学习</a>
+    </h1>
+  
+
+        
+        <a href="/2020/06/05/%E4%BF%A1%E5%8F%B7%E5%AD%A6%E4%B9%A0/" class="archive-article-date">
+  	<time datetime="2020-06-05T14:36:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-05</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="信号的概念："><a href="#信号的概念：" class="headerlink" title="信号的概念："></a>信号的概念：</h2><p>​      信号是一个通知，通知进程进程发生了某些事情。信号是突然发生的所以是<strong>*<u>异步发生</u>*</strong>的。信号的产生：由一个进程发送给另一个进程，或者由内核（可理解为操作系统）发送给进程。例如ctrl+c 这种中断信号或者内存越界等问题。</p>
+<p>​     信号的名字都是由SIG开头的。 信号是一些正整数常量在linux 系统中是与宏的形式存在，宏在signal.h 中（user/include中。</p>
+<p>​       gcc 编译的时候文件头文件的的搜索顺序是从 1./usr/local/include      2.  /usr/inclu当要包括库文件的时候连接路径：/usr/local/lib 然后    /usr/lib 路径下去寻找 </p>
+<p>kill 命令（发送一个信号给进程）</p>
+<p>kill 能给进程发送多种信号，当单独发送kill命令的时候一般为中止信号。</p>
+<p>kill 的默认缺省动作（程序中不进行处理的化大部分是）是干掉进程</p>
+<p>信号sigkill 和sigstop 是不能被忽略的无法让用户自己定义信号方式的。</p>
+<p>信号的三个动作</p>
+<ol>
+<li>信号的缺省动作一般是杀死这个进程</li>
+<li>忽视此此动作（可以在代码中忽视）但SIGKILL 和SIGSTOP是不能被忽视的</li>
+<li>捕捉信号可以捕捉信号重写写处理函数，但是SIGKILL 和SIGSTOP 是不能捕捉处理的。</li>
+</ol>
+<p>​                  </p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">信号学习</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/06/05/%E4%BF%A1%E5%8F%B7%E5%AD%A6%E4%B9%A0/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-hash-索引" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/03/hash-%E7%B4%A2%E5%BC%95/">hash 索引</a>
+    </h1>
+  
+
+        
+        <a href="/2020/06/03/hash-%E7%B4%A2%E5%BC%95/" class="archive-article-date">
+  	<time datetime="2020-06-03T03:47:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-03</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/06/03/hash-%E7%B4%A2%E5%BC%95/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-cuda" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -697,6 +929,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">std::regex</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">字节Byte 计算</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">锁 并发 无锁CAS</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">柔性数组</a>
               </li>
             
             <div class="clearfix"></div>

@@ -6,14 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Hexo</title>
+  <title>锁，无锁CAS 无锁队列 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/index.html">
+  <meta name="description" content="​    锁 ​    锁的三种：    加锁mutex：如果获取不到就西面，让出cpu（去尝试获取锁并不耗时间，等待锁耗时间）    自旋锁      ：获取不到锁。就会继续去检测 不让出cpu ​    无锁CAS （compare and swap）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="锁，无锁CAS 无锁队列">
+<meta property="og:url" content="http://yoursite.com/2020/07/29/%E9%94%81%EF%BC%8C%E6%97%A0%E9%94%81CAS-%E6%97%A0%E9%94%81%E9%98%9F%E5%88%97/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="​    锁 ​    锁的三种：    加锁mutex：如果获取不到就西面，让出cpu（去尝试获取锁并不耗时间，等待锁耗时间）    自旋锁      ：获取不到锁。就会继续去检测 不让出cpu ​    无锁CAS （compare and swap）">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-07-29T14:43:43.000Z">
+<meta property="article:modified_time" content="2020-07-29T14:50:58.664Z">
 <meta property="article:author" content="Jasper Chou">
+<meta property="article:tag" content="锁 并发 无锁CAS">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
@@ -150,226 +155,14 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-    <article id="post-柔性数组" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+            <article id="post-锁，无锁CAS-无锁队列" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/08/24/%E6%9F%94%E6%80%A7%E6%95%B0%E7%BB%84/">柔性数组</a>
-    </h1>
-  
-
-        
-        <a href="/2020/08/24/%E6%9F%94%E6%80%A7%E6%95%B0%E7%BB%84/" class="archive-article-date">
-  	<time datetime="2020-08-24T03:15:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-08-24</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="什么是柔性数组："><a href="#什么是柔性数组：" class="headerlink" title="什么是柔性数组："></a>什么是柔性数组：</h2><p>柔性数组是一个可以存放动态字符串的数据的数组，能根据需求大小在使用阶段进行申请合适的内存。创建和使用期间不占用内存在使用阶段动态扩展内存。</p>
-<h2 id="柔性数组优势："><a href="#柔性数组优势：" class="headerlink" title="柔性数组优势："></a>柔性数组优势：</h2><p>柔性数组的优势： 方便管理内存缓冲区和减少内存的碎片。在使用阶段因为不需要定义数组长度可以在使用阶段动态扩展其内存因此很方便使用</p>
-<h2 id="柔性数组的原理："><a href="#柔性数组的原理：" class="headerlink" title="柔性数组的原理："></a>柔性数组的原理：</h2><pre><code class="c">typedef struct test
-{
-    int a;
-    double b;
-    char *p;
-};
-
-void rou()
-{
-    char a[] = &quot;hello world&quot;;
-    test *stpTest = (test *)malloc(sizeof(test) + strlen(a) + 1);
-    strcpy((char *)stpTest + 1, a);
-
-    getchar();
-}
-
-int main() {
-    rou();
-}
-
-</code></pre>
-<p>运行结果截图</p>
-<p>stpTest 初始地址内存表现：</p>
-<p>​    <img src="/2020/08/24/%E6%9F%94%E6%80%A7%E6%95%B0%E7%BB%84/Ablogs/myblog/source/_posts/%E6%9F%94%E6%80%A7%E6%95%B0%E7%BB%84/%E5%86%85%E5%AD%981.png" alt="stpTest 初始地址"></p>
-<p>stpTest 运行结束strcpy后的地址内存表现：</p>
-<p><img src="/2020/08/24/%E6%9F%94%E6%80%A7%E6%95%B0%E7%BB%84/Ablogs/myblog/source/_posts/%E6%9F%94%E6%80%A7%E6%95%B0%E7%BB%84/%E5%86%85%E5%AD%982.png" alt="stpTest 初始地址"></p>
-<h2 id="原理："><a href="#原理：" class="headerlink" title="原理："></a>原理：</h2><p>  <strong><em>在上面发现指针p申请的内存是在整个结构体的中的头部的</em></strong>。因此(char *)stpTest + 1 完全可以代表着hellow world 的其实内存地址，因此结构体中的p 就会显的很冗余没必要存在，没必要用两个标识来记录一份地址，因此是可以省略结构体重p整个地址的。因此有了柔性数组的产生，只需要用柔性数组标识一个起始地址就能方便使用其不需要提前就new好内存更便于内存管理。</p>
-<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="使用场景："><a href="#使用场景：" class="headerlink" title="使用场景："></a>使用场景：</h3><p> 通常适用于网络中对数据的接受要满足下面2 条件：</p>
-<p>1 当要拷贝接受的数据长度为定长的时候。</p>
-<p>2 事先知道了拷贝了的数据的长度。</p>
-<p>3 只能在支持GNU的编译器下使用下面柔性数组的定义</p>
-<h3 id="使用例子"><a href="#使用例子" class="headerlink" title="使用例子"></a>使用例子</h3><pre><code class="c++">#include&lt;cstring&gt;
-#include&lt;cstdlib&gt;
-#include&lt;cstdio&gt;
-
-# define new_instance(n) (Felexible*) std::malloc(sizeof(Flexible) + (n+1)*sizeof(char))
-
-struct Flexible{
-    int a;
-    char p[0];
-};
-
-int main(){
-    const char copy_str[] = &quot;Hello World&quot;;
-    // 我们使用宏来把创建对象的代码简化
-    Flexible *flexible_p = new_instance(std::strlen(copy_str));
-    std::strcpy(flexible_p-&gt;p, copy_str);
-
-    printf(&quot;Content:\n&quot;);
-    printf(&quot;%s\n&quot;, flexible_p-&gt;p);
-    printf(&quot;Address:\n&quot;);
-    printf(&quot;t.p:\t %p\n&quot;, flexible_p-&gt;p);
-    printf(&quot;&amp;t.p:\t %p\n&quot;, &amp;(flexible_p-&gt;p));
-
-    free(flexible_p);
-}
-//不管是申请前的结构体内存还是申请了内存后的结构体内存sizeof(Flexible) 大小都是4（32位中）
-
-
-</code></pre>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">柔性数组</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/08/24/%E6%9F%94%E6%80%A7%E6%95%B0%E7%BB%84/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-一个Byte-字节数据大小范围计算" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/08/23/%E4%B8%80%E4%B8%AAByte-%E5%AD%97%E8%8A%82%E6%95%B0%E6%8D%AE%E5%A4%A7%E5%B0%8F%E8%8C%83%E5%9B%B4%E8%AE%A1%E7%AE%97/">一个Byte 字节数据大小范围计算</a>
-    </h1>
-  
-
-        
-        <a href="/2020/08/23/%E4%B8%80%E4%B8%AAByte-%E5%AD%97%E8%8A%82%E6%95%B0%E6%8D%AE%E5%A4%A7%E5%B0%8F%E8%8C%83%E5%9B%B4%E8%AE%A1%E7%AE%97/" class="archive-article-date">
-  	<time datetime="2020-08-23T13:59:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-08-23</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>公式：计算一个数据类型的数据大小范围：-2^（字节数<em>8-1）~2^(字节数</em>8-1)-1</p>
-<p>例如一个字节表示的就是 -128~127</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">字节Byte 计算</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/08/23/%E4%B8%80%E4%B8%AAByte-%E5%AD%97%E8%8A%82%E6%95%B0%E6%8D%AE%E5%A4%A7%E5%B0%8F%E8%8C%83%E5%9B%B4%E8%AE%A1%E7%AE%97/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-锁，无锁CAS-无锁队列" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/07/29/%E9%94%81%EF%BC%8C%E6%97%A0%E9%94%81CAS-%E6%97%A0%E9%94%81%E9%98%9F%E5%88%97/">锁，无锁CAS 无锁队列</a>
+    <h1 class="article-title" itemprop="name">
+      锁，无锁CAS 无锁队列
     </h1>
   
 
@@ -391,6 +184,27 @@ int main(){
       
 
       
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
     </div>
     <div class="article-info article-info-index">
       
@@ -409,16 +223,84 @@ int main(){
       
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/07/29/%E9%94%81%EF%BC%8C%E6%97%A0%E9%94%81CAS-%E6%97%A0%E9%94%81%E9%98%9F%E5%88%97/">展开全文 >></a>
-        </p>
-      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2020/07/29/%E9%94%81%EF%BC%8C%E6%97%A0%E9%94%81CAS-%E6%97%A0%E9%94%81%E9%98%9F%E5%88%97/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2020/08/23/%E4%B8%80%E4%B8%AAByte-%E5%AD%97%E8%8A%82%E6%95%B0%E6%8D%AE%E5%A4%A7%E5%B0%8F%E8%8C%83%E5%9B%B4%E8%AE%A1%E7%AE%97/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          一个Byte 字节数据大小范围计算
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/07/24/letCode1/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">letCode</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -438,603 +320,14 @@ int main(){
 
 
 
-
-  
-    <article id="post-letCode1" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/07/24/letCode1/">letCode</a>
-    </h1>
-  
-
-        
-        <a href="/2020/07/24/letCode1/" class="archive-article-date">
-  	<time datetime="2020-07-24T07:55:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-24</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="题目描述："><a href="#题目描述：" class="headerlink" title="题目描述："></a>题目描述：</h1><p>学校在拍年度纪念照时，一般要求学生按照 非递减 的高度顺序排列。</p>
-<p>请你返回能让所有学生以 非递减 高度排列的最小必要移动人数。</p>
-<p>注意，当一组学生被选中时，他们之间可以以任何可能的方式重新排序，而未被选中的学生应该保持不动。</p>
-<p>来源：力扣（LeetCode）<br>链接：<a href="https://leetcode-cn.com/problems/height-checker" target="_blank" rel="noopener">https://leetcode-cn.com/problems/height-checker</a></p>
-<p>示例：</p>
-<p>输入：heights = [1,1,4,2,1,3]<br>输出：3<br>解释：<br>当前数组：[1,1,4,2,1,3]<br>目标数组：[1,1,1,2,3,4]<br>在下标 2 处（从 0 开始计数）出现 4 vs 1 ，所以我们必须移动这名学生。<br>在下标 4 处（从 0 开始计数）出现 1 vs 3 ，所以我们必须移动这名学生。<br>在下标 5 处（从 0 开始计数）出现 3 vs 4 ，所以我们必须移动这名学生。</p>
-<pre><code>这道题目中有疑惑点会造成困扰：.关于示例中的4vs1 就一开混淆以为是和原表进行比对，没想到是和上面的两个数组两两比。
-题目中其实意思是就是比较刷选后和筛选前的数进行对比看几个不一样，文件描述太绕了</code></pre><p>知道问题点之后就简单了先排序之后再进行比对：</p>
-<h2 id="第一种解法"><a href="#第一种解法" class="headerlink" title="第一种解法"></a>第一种解法</h2><p>对与c++ 可以时候Vector 进行数组容器存储这样很方便比对。</p>
-<pre><code class="c++">class Solution {
-public:
-    int heightChecker(vector&lt;int&gt;&amp; heights) {
-        int size = heights.size();
-        vector&lt;int&gt; vec(heights);   // 这很方便
-        sort(vec.begin(), vec.end());  //自己关于库函数使用很少以后要多使用
-        int i = 0;
-        int j = 0;
-        int count = 0;
-        for(i = 0, j = 0; i &lt; size, j &lt; size; i++, j++)  //实验下双小标使用
-        {
-            if(heights[i] != vec[j])
-            {
-                ++count;
-            }
-        }
-        return count;
-    }
-};
-
-</code></pre>
-<p>第二种解法：</p>
-<p>直接冒泡排序再检测： c ：（冒泡逐个相临比对排出最大或者最小：如1和2比 ，2和3比， 3和4比）</p>
-<pre><code class="c">int heightChecker(int* heights, int heightsSize){
-    int *add=calloc(heightsSize,sizeof(int));
-    int i,j,temp,num=0;
-    for(i=0;i&lt;heightsSize;i++){
-        add[i]=heights[i];
-    }
-    for(i=0;i&lt;heightsSize;i++){       //代表比较次数
-        for(j=0;j&lt;heightsSize-i-1;j++){ //代表每次比对
-            if(heights[j]&gt;heights[j+1]){   //冒泡
-                temp=heights[j];
-                heights[j]=heights[j+1];
-                heights[j+1]=temp;
-            }
-        }
-    }
-    for(i=0;i&lt;heightsSize;i++){
-        if(add[i]!=heights[i])
-            num++;
-    }
-    return num;
-}
-
-</code></pre>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">letCode 数组</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/07/24/letCode1/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-并发并行" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/30/%E5%B9%B6%E5%8F%91%E5%B9%B6%E8%A1%8C/">并发并行</a>
-    </h1>
-  
-
-        
-        <a href="/2020/06/30/%E5%B9%B6%E5%8F%91%E5%B9%B6%E8%A1%8C/" class="archive-article-date">
-  	<time datetime="2020-06-30T02:17:59.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-30</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>并行是物理时观下的同时执行，而并发是操作系统同线程这个模型抽象之后站在线程的视角上看到的“同时”执行。</p>
-<p>比喻如下：</p>
-<p>并发：早上给女朋友做早餐开两个灶，一会煎鸡蛋一会炒菜。</p>
-<p>并行：早上给女朋友做早餐开两个灶，女朋友帮做两人同时煎鸡蛋和炒菜。</p>
-<p>并发的关键是你有处理多个任务的能力，不一定要同时。<br>并行的关键是你有同时处理多个任务的能力。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">并发和并行</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/06/30/%E5%B9%B6%E5%8F%91%E5%B9%B6%E8%A1%8C/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-epollselect" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/28/epollselect/">epollselect</a>
-    </h1>
-  
-
-        
-        <a href="/2020/06/28/epollselect/" class="archive-article-date">
-  	<time datetime="2020-06-28T15:06:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-28</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="为什么要用select和epoll"><a href="#为什么要用select和epoll" class="headerlink" title="为什么要用select和epoll"></a>为什么要用select和epoll</h2><p>当需要确定io是否有数据的时候那这个时候没有 select和epoll 的多路复用技术那要想实现这个功能。</p>
-<p>方法如下：</p>
-<p>​      1  直接recv 函数去接受所有io </p>
-<p>​       2 每个io会单独开个线程</p>
-<p>缺点： 网络io中就算1000个io也就只会有1000个有数据 因此上面两种方法效率很低因此需要多路复用技术。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">epoll Select</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/06/28/epollselect/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-查漏补缺" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/20/%E6%9F%A5%E6%BC%8F%E8%A1%A5%E7%BC%BA/">查漏补缺</a>
-    </h1>
-  
-
-        
-        <a href="/2020/06/20/%E6%9F%A5%E6%BC%8F%E8%A1%A5%E7%BC%BA/" class="archive-article-date">
-  	<time datetime="2020-06-20T07:02:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-20</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="lt-等运算符的优先级要大于-赋值运算符因此要注意在同时使用的时候加上括号标识其优先级"><a href="#lt-等运算符的优先级要大于-赋值运算符因此要注意在同时使用的时候加上括号标识其优先级" class="headerlink" title="&lt; 等运算符的优先级要大于= 赋值运算符因此要注意在同时使用的时候加上括号标识其优先级"></a>&lt; 等运算符的优先级要大于= 赋值运算符因此要注意在同时使用的时候加上括号标识其优先级</h2><pre><code class="c++">//example :
-     int size = 10;
-    if (size = -1 &lt; 0)
-     {
-        //now the size is 1;
-        //比较语句的顺序如下： 因为&lt;优先级大于= 因此顺序如下 (size= (-1&lt;0))
-         //(-1&lt;0) result= 1 than the result will give size so the size=1; 
-        printf(&quot;size&quot;);
-    }
-//this is right
-if((size =-1) &lt;0)
-{
-    //now the size = -1
-}</code></pre>
-<h2 id="const-和-define-的区别"><a href="#const-和-define-的区别" class="headerlink" title="const 和#define 的区别"></a>const 和#define 的区别</h2><p><img src="/2020/06/20/%E6%9F%A5%E6%BC%8F%E8%A1%A5%E7%BC%BA/constDefine.png" alt="替换"></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">查漏补缺 优先级 const</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/06/20/%E6%9F%A5%E6%BC%8F%E8%A1%A5%E7%BC%BA/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-const-cast-issue" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/11/const-cast-issue/">const_cast issue</a>
-    </h1>
-  
-
-        
-        <a href="/2020/06/11/const-cast-issue/" class="archive-article-date">
-  	<time datetime="2020-06-11T05:51:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-11</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/06/11/const-cast-issue/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-std-make-pair" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/10/std-make-pair/">std::make_pair</a>
-    </h1>
-  
-
-        
-        <a href="/2020/06/10/std-make-pair/" class="archive-article-date">
-  	<time datetime="2020-06-10T09:48:39.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-10</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="std-make-pair"><a href="#std-make-pair" class="headerlink" title="std::make_pair"></a>std::make_pair</h1>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">std::make_pair</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/06/10/std-make-pair/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-std-regex-Error-record" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/10/std-regex-Error-record/">std::regex Error record</a>
-    </h1>
-  
-
-        
-        <a href="/2020/06/10/std-regex-Error-record/" class="archive-article-date">
-  	<time datetime="2020-06-10T09:42:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-10</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>当时运行执行std::regex的时候出现如下问题：一开始以为是正则表达式不对之后查询发现是gcc版本问题。</p>
-<p>报错信息如下：</p>
-<pre><code class="CQL">The error message is:
-terminate called after throwing an instance of &#39;std::regex_error&#39;
-what(): regex_error
-Aborted
-
-I bisected it to commit 36b945</code></pre>
-<p>原因如下：</p>
-<p>You need at <a href="https://stackoverflow.com/questions/12530406/is-gcc-4-8-or-earlier-buggy-about-regular-expressions" target="_blank" rel="noopener">least gcc 4.9</a> to make regexps work with gcc,。</p>
-<p>因为服务器中此时的gcc版本是4.8因此因为gcc版本问题出现如上问题</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">std::regex</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/06/10/std-regex-Error-record/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
   
   
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
-    </nav>
+  
+
+  
+
+  
+
   
 
 
@@ -1057,8 +350,8 @@ I bisected it to commit 36b945</code></pre>
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,

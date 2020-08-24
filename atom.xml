@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2020-07-24T08:12:53.264Z</updated>
+  <updated>2020-08-24T03:15:38.235Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,84 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>柔性数组</title>
+    <link href="http://yoursite.com/2020/08/24/%E6%9F%94%E6%80%A7%E6%95%B0%E7%BB%84/"/>
+    <id>http://yoursite.com/2020/08/24/%E6%9F%94%E6%80%A7%E6%95%B0%E7%BB%84/</id>
+    <published>2020-08-24T03:15:04.000Z</published>
+    <updated>2020-08-24T03:15:38.235Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="什么是柔性数组："><a href="#什么是柔性数组：" class="headerlink" title="什么是柔性数组："></a>什么是柔性数组：</h2><p>柔性数组是一个可以存放动态字符串的数据的数组，能根据需求大小在使用阶段进行申请合适的内存。创建和使用期间不占用内存在使用阶段动态扩展内存。</p><h2 id="柔性数组优势："><a href="#柔性数组优势：" class="headerlink" title="柔性数组优势："></a>柔性数组优势：</h2><p>柔性数组的优势： 方便管理内存缓冲区和减少内存的碎片。在使用阶段因为不需要定义数组长度可以在使用阶段动态扩展其内存因此很方便使用</p><h2 id="柔性数组的原理："><a href="#柔性数组的原理：" class="headerlink" title="柔性数组的原理："></a>柔性数组的原理：</h2><pre><code class="c">typedef struct test{    int a;    double b;    char *p;};void rou(){    char a[] = &quot;hello world&quot;;    test *stpTest = (test *)malloc(sizeof(test) + strlen(a) + 1);    strcpy((char *)stpTest + 1, a);    getchar();}int main() {    rou();}</code></pre><p>运行结果截图</p><p>stpTest 初始地址内存表现：</p><p>​    <img src="/2020/08/24/%E6%9F%94%E6%80%A7%E6%95%B0%E7%BB%84/Ablogs/myblog/source/_posts/%E6%9F%94%E6%80%A7%E6%95%B0%E7%BB%84/%E5%86%85%E5%AD%981.png" alt="stpTest 初始地址"></p><p>stpTest 运行结束strcpy后的地址内存表现：</p><p><img src="/2020/08/24/%E6%9F%94%E6%80%A7%E6%95%B0%E7%BB%84/Ablogs/myblog/source/_posts/%E6%9F%94%E6%80%A7%E6%95%B0%E7%BB%84/%E5%86%85%E5%AD%982.png" alt="stpTest 初始地址"></p><h2 id="原理："><a href="#原理：" class="headerlink" title="原理："></a>原理：</h2><p>  <strong><em>在上面发现指针p申请的内存是在整个结构体的中的头部的</em></strong>。因此(char *)stpTest + 1 完全可以代表着hellow world 的其实内存地址，因此结构体中的p 就会显的很冗余没必要存在，没必要用两个标识来记录一份地址，因此是可以省略结构体重p整个地址的。因此有了柔性数组的产生，只需要用柔性数组标识一个起始地址就能方便使用其不需要提前就new好内存更便于内存管理。</p><h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="使用场景："><a href="#使用场景：" class="headerlink" title="使用场景："></a>使用场景：</h3><p> 通常适用于网络中对数据的接受要满足下面2 条件：</p><p>1 当要拷贝接受的数据长度为定长的时候。</p><p>2 事先知道了拷贝了的数据的长度。</p><p>3 只能在支持GNU的编译器下使用下面柔性数组的定义</p><h3 id="使用例子"><a href="#使用例子" class="headerlink" title="使用例子"></a>使用例子</h3><pre><code class="c++">#include&lt;cstring&gt;#include&lt;cstdlib&gt;#include&lt;cstdio&gt;# define new_instance(n) (Felexible*) std::malloc(sizeof(Flexible) + (n+1)*sizeof(char))struct Flexible{    int a;    char p[0];};int main(){    const char copy_str[] = &quot;Hello World&quot;;    // 我们使用宏来把创建对象的代码简化    Flexible *flexible_p = new_instance(std::strlen(copy_str));    std::strcpy(flexible_p-&gt;p, copy_str);    printf(&quot;Content:\n&quot;);    printf(&quot;%s\n&quot;, flexible_p-&gt;p);    printf(&quot;Address:\n&quot;);    printf(&quot;t.p:\t %p\n&quot;, flexible_p-&gt;p);    printf(&quot;&amp;t.p:\t %p\n&quot;, &amp;(flexible_p-&gt;p));    free(flexible_p);}//不管是申请前的结构体内存还是申请了内存后的结构体内存sizeof(Flexible) 大小都是4（32位中）</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2 id=&quot;什么是柔性数组：&quot;&gt;&lt;a href=&quot;#什么是柔性数组：&quot; class=&quot;headerlink&quot; title=&quot;什么是柔性数组：&quot;&gt;&lt;/a&gt;什么是柔性数组：&lt;/h2&gt;&lt;p&gt;柔性数组是一个可以存放动态字符串的数据的数组，能根据需求大小在使用阶段进行申请合适的内存。创
+      
+    
+    </summary>
+    
+    
+    
+      <category term="柔性数组" scheme="http://yoursite.com/tags/%E6%9F%94%E6%80%A7%E6%95%B0%E7%BB%84/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>一个Byte 字节数据大小范围计算</title>
+    <link href="http://yoursite.com/2020/08/23/%E4%B8%80%E4%B8%AAByte-%E5%AD%97%E8%8A%82%E6%95%B0%E6%8D%AE%E5%A4%A7%E5%B0%8F%E8%8C%83%E5%9B%B4%E8%AE%A1%E7%AE%97/"/>
+    <id>http://yoursite.com/2020/08/23/%E4%B8%80%E4%B8%AAByte-%E5%AD%97%E8%8A%82%E6%95%B0%E6%8D%AE%E5%A4%A7%E5%B0%8F%E8%8C%83%E5%9B%B4%E8%AE%A1%E7%AE%97/</id>
+    <published>2020-08-23T13:59:30.000Z</published>
+    <updated>2020-08-23T14:01:45.522Z</updated>
+    
+    <content type="html"><![CDATA[<p>公式：计算一个数据类型的数据大小范围：-2^（字节数<em>8-1）~2^(字节数</em>8-1)-1</p><p>例如一个字节表示的就是 -128~127</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;公式：计算一个数据类型的数据大小范围：-2^（字节数&lt;em&gt;8-1）~2^(字节数&lt;/em&gt;8-1)-1&lt;/p&gt;
+&lt;p&gt;例如一个字节表示的就是 -128~127&lt;/p&gt;
+
+      
+    
+    </summary>
+    
+    
+    
+      <category term="字节Byte 计算" scheme="http://yoursite.com/tags/%E5%AD%97%E8%8A%82Byte-%E8%AE%A1%E7%AE%97/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>锁，无锁CAS 无锁队列</title>
+    <link href="http://yoursite.com/2020/07/29/%E9%94%81%EF%BC%8C%E6%97%A0%E9%94%81CAS-%E6%97%A0%E9%94%81%E9%98%9F%E5%88%97/"/>
+    <id>http://yoursite.com/2020/07/29/%E9%94%81%EF%BC%8C%E6%97%A0%E9%94%81CAS-%E6%97%A0%E9%94%81%E9%98%9F%E5%88%97/</id>
+    <published>2020-07-29T14:43:43.000Z</published>
+    <updated>2020-07-29T14:50:58.664Z</updated>
+    
+    <content type="html"><![CDATA[<p>​    锁</p><p>​    锁的三种：</p><p>   加锁mutex：如果获取不到就西面，让出cpu（去尝试获取锁并不耗时间，等待锁耗时间）</p><p>   自旋锁      ：获取不到锁。就会继续去检测 不让出cpu</p><p>​    无锁CAS （compare and swap）</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;​    锁&lt;/p&gt;
+&lt;p&gt;​    锁的三种：&lt;/p&gt;
+&lt;p&gt;   加锁mutex：如果获取不到就西面，让出cpu（去尝试获取锁并不耗时间，等待锁耗时间）&lt;/p&gt;
+&lt;p&gt;   自旋锁      ：获取不到锁。就会继续去检测 不让出cpu&lt;/p&gt;
+&lt;p&gt;​    无锁CAS
+      
+    
+    </summary>
+    
+    
+    
+      <category term="锁 并发 无锁CAS" scheme="http://yoursite.com/tags/%E9%94%81-%E5%B9%B6%E5%8F%91-%E6%97%A0%E9%94%81CAS/"/>
+    
+  </entry>
   
   <entry>
     <title>letCode</title>
